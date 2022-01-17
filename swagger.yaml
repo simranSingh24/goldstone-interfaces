@@ -1,0 +1,336 @@
+---
+swagger: "2.0"
+info:
+  description: "This module contains a collection of YANG definitions for\n     managing\
+    \ network interfaces."
+  version: "1.0"
+  title: "goldstone-interfaces API"
+host: "localhost:5000"
+#basepath: "/api"
+consumes:
+- "application/yang-data+json"
+produces:
+- "application/yang-data+json"
+paths:
+  /data/interfaces/:
+    get:
+      tags:
+      - "goldstone-interfaces"
+      summary: "returns goldstone.interfaces.Interfaces"
+      operationId: data.interfaces.get_all
+      description: "Interface parameters."
+      parameters: []
+      responses:
+        200:
+          description: "goldstone.interfaces.Interfaces"
+          schema:
+            $ref: "#/definitions/goldstone.interfaces.InterfacesWrapper"
+        400:
+          description: "Internal error"
+    #post:
+      #tags:
+      #- "goldstone-interfaces"
+      #summary: "creates goldstone.interfaces.Interfaces"
+      #operationId: data.interfaces.post
+      #description: "Interface parameters."
+      #parameters:
+      #- in: "body"
+       # name: "bodypost"
+       # description: "goldstone.interfaces.Interfaces to be added to list"
+        #required: false
+        #schema:
+        #  $ref: "#/definitions/goldstone.interfaces.InterfacesWrapper"
+      #responses:
+        #201:
+         # description: "Object created"
+       # 400:
+          #description: "Internal error"
+        #409:
+          #description: "Object already exists"
+  /data/interfaces/{name}/:
+    get:
+      tags:
+      - "goldstone-interfaces"
+      summary: "returns goldstone.interfaces.interfaces.Interface"
+      operationId: data.interfaces.get
+      description: "The list of interfaces on the device.\n\n         The status of\
+        \ an interface is available in this list in the\n         operational state.\
+        \  If the configuration of a\n         system-controlled interface cannot\
+        \ be used by the system\n         (e.g., the interface hardware present does\
+        \ not match the\n         interface type), then the configuration is not applied\
+        \ to\n         the system-controlled interface shown in the operational\n\
+        \         state.  If the configuration of a user-controlled interface\n  \
+        \       cannot be used by the system, the configured interface is\n      \
+        \   not instantiated in the operational state.\n\n         System-controlled\
+        \ interfaces created by the system are\n         always present in this list\
+        \ in the operational state,\n         whether or not they are configured."
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Id of interface"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "goldstone.interfaces.interfaces.Interface"
+          schema:
+            $ref: "#/definitions/goldstone.interfaces.interfaces.InterfaceWrapper"
+        400:
+          description: "Internal error"
+
+    put:
+      tags:
+      - "goldstone-interfaces"
+      summary: "creates or updates goldstone.interfaces.interfaces.Interface"
+      operationId: data.interfaces.put
+      description: "The list of interfaces on the device.\n\n         The status of\
+        \ an interface is available in this list in the\n         operational state.\
+        \  If the configuration of a\n         system-controlled interface cannot\
+        \ be used by the system\n         (e.g., the interface hardware present does\
+        \ not match the\n         interface type), then the configuration is not applied\
+        \ to\n         the system-controlled interface shown in the operational\n\
+        \         state.  If the configuration of a user-controlled interface\n  \
+        \       cannot be used by the system, the configured interface is\n      \
+        \   not instantiated in the operational state.\n\n         System-controlled\
+        \ interfaces created by the system are\n         always present in this list\
+        \ in the operational state,\n         whether or not they are configured."
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Id of interface"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "bodydef"
+        description: "goldstone.interfaces.interfaces.Interface to be added or updated"
+        required: false
+        schema:
+          $ref: "#/definitions/goldstone.interfaces.interfaces.InterfaceWrapper"
+
+      responses:
+        201:
+          description: "Object created"
+        400:
+          description: "Internal error"
+        204:
+          description: "Object modified"
+    
+definitions:
+  goldstone.interfaces.AdminStatusEnumeration:
+    type: "string"
+    enum:
+    - "up"
+    - "down"
+    - "testing"
+    #additionalProperties: true
+  goldstone.interfaces.AutoNegoEnumeration:
+    type: "string"
+    enum:
+    - "yes"
+    - "no"
+    #additionalProperties: true
+  goldstone.interfaces.ClearCounters:
+    type: "object"
+    properties:
+      output:
+        $ref: "#/definitions/goldstone.interfaces.clearcounters.Output"
+    #additionalProperties: true    
+  goldstone.interfaces.FecEnumeration:
+    type: "string"
+    enum:
+    - "fc"
+    - "rs"
+    - "none"
+    #additionalProperties: true
+  goldstone.interfaces.InterfaceOperStatus:
+    type: "object"
+    properties:
+      oper-status:
+        description: "The current operational state of the interface.\n          \
+          \ This leaf has the same semantics as ifOperStatus. REF:RFC 2863: The Interfaces\
+          \ Group MIB - ifOperStatus"
+        $ref: "#/definitions/goldstone.interfaces.OperStatusEnumeration"
+    #additionalProperties: true    
+  goldstone.interfaces.InterfaceTypeEnumeration:
+    type: "string"
+    enum:
+    - "SR"
+    - "SR2"
+    - "SR4"
+    - "CR"
+    - "CR2"
+    - "CR4"
+    - "LR"
+    - "LR2"
+    - "LR4"
+    - "KR"
+    - "KR2"
+    - "KR4"
+    #additionalProperties: true
+  goldstone.interfaces.Interfaces:
+    type: "object"
+    properties:
+      interface:
+        type: "array"
+        description: "The list of interfaces on the device.\n\n         The status\
+          \ of an interface is available in this list in the\n         operational\
+          \ state.  If the configuration of a\n         system-controlled interface\
+          \ cannot be used by the system\n         (e.g., the interface hardware present\
+          \ does not match the\n         interface type), then the configuration is\
+          \ not applied to\n         the system-controlled interface shown in the\
+          \ operational\n         state.  If the configuration of a user-controlled\
+          \ interface\n         cannot be used by the system, the configured interface\
+          \ is\n         not instantiated in the operational state.\n\n         System-controlled\
+          \ interfaces created by the system are\n         always present in this\
+          \ list in the operational state,\n         whether or not they are configured."
+        items:
+          $ref: "#/definitions/goldstone.interfaces.interfaces.Interface"
+    #additionalProperties: true      
+  goldstone.interfaces.InterfacesWrapper:
+    properties:
+      interfaces:
+        $ref: "#/definitions/goldstone.interfaces.Interfaces"
+    #additionalProperties: true    
+  goldstone.interfaces.OperStatusEnumeration:
+    type: "string"
+    enum:
+    - "up"
+    - "down"
+    - "testing"
+    - "unknown"
+    - "dormant"
+    - "not-present"
+    - "lower-layer-down"
+    #additionalProperties: true
+  goldstone.interfaces.PortBreakoutConfig:
+    type: "object"
+    properties:
+      breakout:
+        $ref: "#/definitions/goldstone.interfaces.portbreakoutconfig.Breakout"
+    #additionalProperties: true    
+  goldstone.interfaces.StatusEnumeration:
+    type: "string"
+    enum:
+    - "faliure"
+    - "success"
+    #additionalProperties: true
+  goldstone.interfaces.clearcounters.Output:
+    type: "object"
+    properties:
+      status:
+        $ref: "#/definitions/goldstone.interfaces.StatusEnumeration"
+    #additionalProperties: true    
+  goldstone.interfaces.interfaces.Interface:
+    allOf:
+    - $ref: "#/definitions/goldstone.interfaces.InterfaceOperStatus"
+    - $ref: "#/definitions/goldstone.interfaces.PortBreakoutConfig"
+    - type: "object"
+      properties:
+        admin-status:
+          description: "The desired state of the interface.\n\n           This leaf\
+            \ has the same read semantics as ifAdminStatus. REF:RFC 2863: The Interfaces\
+            \ Group MIB - ifAdminStatus"
+          $ref: "#/definitions/goldstone.interfaces.AdminStatusEnumeration"
+        interface-type:
+          $ref: "#/definitions/goldstone.interfaces.InterfaceTypeEnumeration"
+        fec:
+          $ref: "#/definitions/goldstone.interfaces.FecEnumeration"
+        lanes:
+          type: "string"
+          description: "Todo REF:Todo"
+        name:
+          type: "string"
+          description: "The name of the interface.\n\n           A device MAY restrict\
+            \ the allowed values for this leaf,\n           possibly depending on\
+            \ the type of the interface.\n           For system-controlled interfaces,\
+            \ this leaf is the\n           device-specific name of the interface.\n\
+            \n           If a client tries to create configuration for a\n       \
+            \    system-controlled interface that is not present in the\n        \
+            \   operational state, the server MAY reject the request if\n        \
+            \   the implementation does not support pre-provisioning of\n        \
+            \   interfaces or if the name refers to an interface that can\n      \
+            \     never exist in the system.  A Network Configuration\n          \
+            \ Protocol (NETCONF) server MUST reply with an rpc-error\n           with\
+            \ the error-tag 'invalid-value' in this case.\n\n           If the device\
+            \ supports pre-provisioning of interface\n           configuration, the\
+            \ 'pre-provisioning' feature is\n           advertised.\n\n          \
+            \ If the device allows arbitrarily named user-controlled\n           interfaces,\
+            \ the 'arbitrary-names' feature is advertised.\n\n           When a configured\
+            \ user-controlled interface is created by\n           the system, it is\
+            \ instantiated with the same name in the\n           operational state.\n\
+            \n           A server implementation MAY map this leaf to the ifName\n\
+            \           MIB object.  Such an implementation needs to use some\n  \
+            \         mechanism to handle the differences in size and characters\n\
+            \           allowed between this leaf and ifName.  The definition of\n\
+            \           such a mechanism is outside the scope of this document. REF:RFC\
+            \ 2863: The Interfaces Group MIB - ifName"
+        alias:
+          type: "string"
+          description: "Todo REF:Todo"
+        description:
+          type: "string"
+          description: "A textual description of the interface.\n\n           A server\
+            \ implementation MAY map this leaf to the ifAlias\n           MIB object.\
+            \  Such an implementation needs to use some\n           mechanism to handle\
+            \ the differences in size and characters\n           allowed between this\
+            \ leaf and ifAlias.  The definition of\n           such a mechanism is\
+            \ outside the scope of this document.\n\n           Since ifAlias is defined\
+            \ to be stored in non-volatile\n           storage, the MIB implementation\
+            \ MUST map ifAlias to the\n           value of 'description' in the persistently\
+            \ stored\n           configuration. REF:RFC 2863: The Interfaces Group\
+            \ MIB - ifAlias"
+        speed:
+          type: "integer"
+          format: "int32"
+          description: "An estimate of the interface's current bandwidth in bits\n\
+            \             per second.  For interfaces that do not vary in\n      \
+            \       bandwidth or for those where no accurate estimation can\n    \
+            \         be made, this node should contain the nominal bandwidth.\n \
+            \            For interfaces that have no concept of bandwidth, this\n\
+            \             node is not present. REF:RFC 2863: The Interfaces Group\
+            \ MIB -\n                     ifSpeed, ifHighSpeed"
+        if-index:
+          type: "integer"
+          format: "int32"
+          description: "The ifIndex value for the ifEntry represented by this\n  \
+            \         interface. REF:RFC 2863: The Interfaces Group MIB - ifIndex"
+        auto-nego:
+          $ref: "#/definitions/goldstone.interfaces.AutoNegoEnumeration"
+      description: "The list of interfaces on the device.\n\n         The status of\
+        \ an interface is available in this list in the\n         operational state.\
+        \  If the configuration of a\n         system-controlled interface cannot\
+        \ be used by the system\n         (e.g., the interface hardware present does\
+        \ not match the\n         interface type), then the configuration is not applied\
+        \ to\n         the system-controlled interface shown in the operational\n\
+        \         state.  If the configuration of a user-controlled interface\n  \
+        \       cannot be used by the system, the configured interface is\n      \
+        \   not instantiated in the operational state.\n\n         System-controlled\
+        \ interfaces created by the system are\n         always present in this list\
+        \ in the operational state,\n         whether or not they are configured."
+      #additionalProperties: true    
+  goldstone.interfaces.interfaces.InterfaceWrapper:
+    properties:
+      interface:
+        $ref: "#/definitions/goldstone.interfaces.interfaces.Interface"
+    #additionalProperties: true    
+  goldstone.interfaces.portbreakoutconfig.Breakout:
+    type: "object"
+    properties:
+      parent:
+        type: "string"
+        x-path: "/gs-if:interfaces/gs-if:interface/gs-if:name"
+      channel-speed:
+        type: "string"
+        description: "Sets the channel speed on each channel -- the\n          supported\
+          \ values are defined by the\n          ETHERNET_SPEED identity"
+      num-channels:
+        type: "integer"
+        format: "int32"
+        description: "Sets the number of channels to 'breakout' on a port\n      \
+          \    capable of channelization"
+    #additionalProperties: true      
+  goldstone.interfaces.portbreakoutconfig.BreakoutWrapper:
+    properties:
+      breakout:
+        $ref: "#/definitions/goldstone.interfaces.portbreakoutconfig.Breakout"
+    #additionalProperties: true
